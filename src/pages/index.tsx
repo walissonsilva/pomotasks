@@ -1,5 +1,5 @@
 import Head from "next/head";
 
 export default function Home() {
-  return <></>;
+  return <h1>Teste</h1>;
 }
