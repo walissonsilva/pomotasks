@@ -1,25 +1,25 @@
 const colorsPallete = {
-  title: 'dark',
+  title: "dark",
   colors: {
-    'primary-color': '#0267C1',
-    'secondary-color': '#787FF6',
-    
-    'text-color': '#ffffff',
+    "primary-color": "#0267C1",
+    "secondary-color": "#787FF6",
 
-    "background-body": '#272727',
-    "background-header": '#060F16',
-    "background-primary": '#0E1116',
-    "background-secondary": '#383D3B',
+    "text-color": "#ffffff",
 
-    white: '#ffffff',
-    alpha: '#D3D5D4',
-    black: '#000000',
+    "background-body": "#0E1116",
+    "background-header": "#060F16",
+    "background-primary": "#272727",
+    "background-secondary": "#383D3B",
 
-    success: '#17AE38',
-    info: '#0193F7',
-    warning: '#FFD950',
-    danger: '#FF2366',
+    white: "#ffffff",
+    alpha: "#D3D5D4",
+    black: "#000000",
+
+    success: "#17AE38",
+    info: "#0193F7",
+    warning: "#FFD950",
+    danger: "#FF2366",
   },
-}
+};
 
-export default colorsPallete
+export default colorsPallete;

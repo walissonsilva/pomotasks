@@ -1,5 +1,16 @@
-import Head from "next/head";
+import NextHead from "../components/NextHead";
+import { HomeComponentPage } from "../components/pages/Home";
 
 export default function Home() {
-  return <h1>Teste</h1>;
+  return (
+    <>
+      <NextHead
+        title="PomoTasks"
+        description=""
+        ogImage="/images/pomotasks.png"
+      />
+
+      <HomeComponentPage />
+    </>
+  );
 }
