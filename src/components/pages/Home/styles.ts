@@ -49,3 +49,41 @@ export const ButtonsContainer = styled.div`
     min-width: 140px;
   }
 `;
+
+export const ModalContentContainer = styled.div`
+  padding: 2rem;
+
+  h3 {
+    font-weight: 500;
+    margin-bottom: 2rem;
+    font-size: 1.6rem;
+  }
+`;
+
+export const EmojiScoreContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const EmojiScore = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 3rem;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${(props) => props.theme.colors["background-secondary"]};
+  }
+
+  & > span:first-child {
+    font-size: 4rem;
+  }
+
+  & > span:last-child {
+    font-size: 1rem;
+  }
+`;

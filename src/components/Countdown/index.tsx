@@ -2,6 +2,10 @@ import * as ReactCountdown from "react-countdown";
 
 import { Container, ValueContainer, Value, Label } from "./styles";
 
+type CountdownProps = {
+  onComplete: () => void;
+};
+
 const CountdownTemplate = ({
   minutes,
   seconds,
@@ -20,16 +24,17 @@ const CountdownTemplate = ({
   );
 };
 
-export const Countdown: React.FC = () => {
+export const Countdown: React.FC<CountdownProps> = ({ onComplete }) => {
   return (
     <>
       <ReactCountdown.default
         className=""
         zeroPadTime={2}
         autoStart
-        date={Date.now() + 1500000}
+        date={Date.now() + 10000}
         renderer={(props) => CountdownTemplate(props)}
         intervalDelay={0}
+        onComplete={onComplete}
       />
     </>
   );

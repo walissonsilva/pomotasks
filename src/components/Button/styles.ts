@@ -2,6 +2,7 @@ import styled, { css } from "styled-components";
 
 interface ButtonProps {
   size: "sm" | "md" | "lg";
+  color: "primary" | "success" | "danger";
   disabled?: boolean;
 }
 
@@ -16,6 +17,17 @@ export const Container = styled.button<ButtonProps>`
   font-weight: 500;
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
   transition: box-shadow 0.3s, filter 0.3s;
+
+  ${(props) =>
+    props.color === "success" &&
+    css`
+      background: ${(props) => props.theme.colors.success};
+    `}
+  ${(props) =>
+    props.color === "danger" &&
+    css`
+      background: ${(props) => props.theme.colors.danger};
+    `}
 
   ${(props) =>
     props.size === "sm" &&
