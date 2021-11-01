@@ -1,9 +1,12 @@
+import { useMemo } from "react";
 import * as ReactCountdown from "react-countdown";
 
 import { Container, ValueContainer, Value, Label } from "./styles";
 
 type CountdownProps = {
-  onComplete: () => void;
+  isModalOpen: boolean;
+  startDateTime?: string;
+  onComplete: (triggerFromButton?: boolean) => void;
 };
 
 const CountdownTemplate = ({
@@ -24,17 +27,23 @@ const CountdownTemplate = ({
   );
 };
 
-export const Countdown: React.FC<CountdownProps> = ({ onComplete }) => {
+export const Countdown: React.FC<CountdownProps> = ({
+  isModalOpen,
+  onComplete,
+}) => {
+  const endDateTime = useMemo(() => {
+    return Date.now() + 3000;
+  }, []);
+
   return (
     <>
       <ReactCountdown.default
         className=""
         zeroPadTime={2}
         autoStart
-        date={Date.now() + 10000}
+        date={endDateTime}
         renderer={(props) => CountdownTemplate(props)}
-        intervalDelay={0}
-        onComplete={onComplete}
+        onComplete={() => onComplete(false)}
       />
     </>
   );

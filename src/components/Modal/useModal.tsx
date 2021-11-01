@@ -7,8 +7,13 @@ export function useModal() {
     setIsOpen(!isOpen);
   };
 
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
   return {
     isOpen,
+    openModal,
     toggleModal,
   };
 }

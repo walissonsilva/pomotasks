@@ -107,7 +107,7 @@ const GlobalStyles = createGlobalStyle`
     border-radius: 10px;
     box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
     position: relative;
-    margin-top: 60px;
+    margin-top: -100px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 

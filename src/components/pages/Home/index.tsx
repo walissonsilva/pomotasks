@@ -7,6 +7,8 @@ import { Input } from "../../Input";
 import { Modal } from "../../Modal";
 import { useModal } from "../../Modal/useModal";
 
+import { emojisScore, IEmojiScore } from "../../../data/emojisScore";
+
 import * as S from "./styles";
 
 type taskState = "IDLE" | "IN_PROGRESS" | "FINISHED";
@@ -15,16 +17,16 @@ type ITask = {
   title: string;
   startTime: string;
   endTime: string;
+  score: IEmojiScore;
 };
 
 export const HomeComponentPage: React.FC = () => {
   const [task, setTask] = useState<ITask>({} as ITask);
   const [taskState, setTaskState] = useState<taskState>("IDLE");
-  const { isOpen, toggleModal } = useModal();
+  const { isOpen: isModalOpen, openModal, toggleModal } = useModal();
 
   function handleInitPomodoro(evt: FormEvent) {
     evt.preventDefault();
-    toggleModal();
 
     if (Object.keys(task).length && task.title) {
       setTaskState("IN_PROGRESS");
@@ -42,16 +44,23 @@ export const HomeComponentPage: React.FC = () => {
     setTask({} as ITask);
   }
 
-  function handleFinishPomodoro() {
-    toggleModal();
+  function handleFinishPomodoro(triggerFromButton?: boolean) {
+    console.log(triggerFromButton);
+    if (!triggerFromButton) {
+      const audio = new Audio("/sounds/beep-short.mp3");
+      audio.play();
+    }
+
+    openModal();
   }
 
-  function savePomodoroInfo() {
+  function savePomodoroInfo(score: IEmojiScore) {
     const tasks = localStorage.getItem("@pomotasks/tasks");
 
     const endTask: ITask = {
       ...task,
       endTime: new Date().toLocaleString(),
+      score: score,
     };
 
     if (tasks) {
@@ -82,7 +91,6 @@ export const HomeComponentPage: React.FC = () => {
               placeholder="Informe sua tarefa..."
               value={task.title}
               onChange={(evt: FormEvent<HTMLInputElement>) => {
-                console.log(evt.currentTarget.value);
                 setTask({
                   ...task,
                   title: evt.currentTarget.value,
@@ -96,34 +104,34 @@ export const HomeComponentPage: React.FC = () => {
         <S.CountdownContainer>
           <h2>{task.title}</h2>
 
-          <Countdown onComplete={handleFinishPomodoro} />
+          <Countdown
+            isModalOpen={isModalOpen}
+            onComplete={handleFinishPomodoro}
+          />
 
           <S.ButtonsContainer>
             <Button onClick={handleGiveUpPomodoro} color="danger">
               Abandonar
             </Button>
-            <Button onClick={handleFinishPomodoro} color="success">
+            <Button onClick={() => handleFinishPomodoro(true)} color="success">
               Concluir
             </Button>
           </S.ButtonsContainer>
 
-          <Modal isOpen={isOpen} toggleModal={toggleModal}>
+          <Modal isOpen={isModalOpen} toggleModal={toggleModal}>
             <S.ModalContentContainer>
               <h3>Como foi o seu pomodoro?</h3>
 
               <S.EmojiScoreContainer>
-                <S.EmojiScore>
-                  <span>🤩</span>
-                  <span>Focado</span>
-                </S.EmojiScore>
-                <S.EmojiScore>
-                  <span>😐</span>
-                  <span>Neutro</span>
-                </S.EmojiScore>
-                <S.EmojiScore>
-                  <span>😔</span>
-                  <span>Sem foco</span>
-                </S.EmojiScore>
+                {emojisScore.map((score) => (
+                  <S.EmojiScore
+                    key={score.description}
+                    onClick={() => savePomodoroInfo(score)}
+                  >
+                    <span>{score.emoji}</span>
+                    <span>{score.description}</span>
+                  </S.EmojiScore>
+                ))}
               </S.EmojiScoreContainer>
             </S.ModalContentContainer>
           </Modal>
