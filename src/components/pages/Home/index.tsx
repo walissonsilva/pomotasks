@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AppCard from "../../AppCard";
 import { Button } from "../../Button";
@@ -10,6 +10,8 @@ import { useModal } from "../../Modal/useModal";
 import { emojisScore, IEmojiScore } from "../../../data/emojisScore";
 
 import * as S from "./styles";
+import { sendBrowserNotification } from "../../../utils/sendNotification";
+import { TasksList } from "../../TasksList";
 
 export type ITaskState = "IDLE" | "IN_PROGRESS" | "FINISHED" | "INTERRUPTION";
 
@@ -22,8 +24,34 @@ export type ITask = {
 
 export const HomeComponentPage: React.FC = () => {
   const [task, setTask] = useState<ITask>({} as ITask);
+  const [todayPomotasks, setTodayPomotasks] = useState<ITask[]>([]);
   const [taskState, setTaskState] = useState<ITaskState>("IDLE");
   const { isOpen: isModalOpen, openModal, toggleModal } = useModal();
+
+  useEffect(() => {
+    if (Notification.permission === "default") {
+      Notification.requestPermission(() => {
+        sendBrowserNotification("Pomotasks", "This is an notification example");
+      });
+    }
+
+    if (taskState === "FINISHED" || !todayPomotasks.length) {
+      const tasksOnStorage = localStorage.getItem("@pomotasks/tasks");
+      if (tasksOnStorage) {
+        const pomotasks: ITask[] = JSON.parse(tasksOnStorage);
+
+        setTodayPomotasks(
+          pomotasks
+            .reverse()
+            .filter(
+              (pomotask) =>
+                pomotask.startTime.split(" ")[0] ===
+                new Date().toLocaleDateString()
+            )
+        );
+      }
+    }
+  }, [taskState, todayPomotasks]);
 
   function handleInitPomodoro(evt: FormEvent) {
     evt.preventDefault();
@@ -56,6 +84,9 @@ export const HomeComponentPage: React.FC = () => {
     if (taskState === "IN_PROGRESS") {
       openModal();
       setTaskState("FINISHED");
+      sendBrowserNotification(task.title, "Pomotask timer is over");
+    } else if (taskState === "INTERRUPTION") {
+      sendBrowserNotification(task.title, "Let's come back to work?");
     }
   }
 
@@ -150,20 +181,22 @@ export const HomeComponentPage: React.FC = () => {
         <S.CountdownContainer>
           {taskState === "INTERRUPTION" ? (
             <>
-              <h2>Tempo de Descanso</h2>
+              <h2>Short Break 🔋</h2>
               <h4>{task.title}</h4>
             </>
           ) : (
-            <h2>{task.title}</h2>
+            <h2>{task.title} 🎯</h2>
           )}
 
-          {(taskState === "INTERRUPTION" || taskState === "IN_PROGRESS") && (
+          {taskState === "INTERRUPTION" || taskState === "IN_PROGRESS" ? (
             <Countdown
               key={Date.now()}
               isModalOpen={isModalOpen}
               taskState={taskState}
               onComplete={handleFinishCountdown}
             />
+          ) : (
+            <h4>You need to take some rest...</h4>
           )}
 
           <S.ButtonsContainer>{renderButtons()}</S.ButtonsContainer>
@@ -187,6 +220,8 @@ export const HomeComponentPage: React.FC = () => {
           </Modal>
         </S.CountdownContainer>
       )}
+
+      <TasksList title="Today Tasks" tasks={todayPomotasks} />
     </AppCard>
   );
 };

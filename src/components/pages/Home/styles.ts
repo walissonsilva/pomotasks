@@ -36,21 +36,18 @@ export const CountdownContainer = styled.div`
   align-items: center;
 
   h2 {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 500;
     text-align: center;
 
     margin-bottom: 3rem;
-
-    & + h4 {
-      margin-bottom: 1rem;
-    }
   }
 
   h4 {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     color: ${(props) => props.theme.colors.alpha};
-    margin-bottom: 3rem;
+    margin: -2rem 0 3rem;
+    font-weight: 400;
   }
 `;
 
@@ -58,7 +55,7 @@ export const ButtonsContainer = styled.div`
   display: flex;
   justify-content: space-around;
   gap: 2rem;
-  margin-top: 2rem;
+  margin: 2rem 0 1rem;
 
   button {
     min-width: 140px;
