@@ -16,8 +16,12 @@ export const InputTaskContainer = styled.form`
   margin-top: 1.6rem;
 
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
   gap: 1rem;
+
+  h3 {
+    font-weight: 300;
+  }
 
   button {
     margin-top: 1rem;
@@ -34,7 +38,18 @@ export const CountdownContainer = styled.div`
   h2 {
     font-size: 2rem;
     font-weight: 500;
+    text-align: center;
 
+    margin-bottom: 3rem;
+
+    & + h4 {
+      margin-bottom: 1rem;
+    }
+  }
+
+  h4 {
+    font-size: 1.3rem;
+    color: ${(props) => props.theme.colors.alpha};
     margin-bottom: 3rem;
   }
 `;

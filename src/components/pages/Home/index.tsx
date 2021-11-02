@@ -11,9 +11,9 @@ import { emojisScore, IEmojiScore } from "../../../data/emojisScore";
 
 import * as S from "./styles";
 
-type taskState = "IDLE" | "IN_PROGRESS" | "FINISHED";
+export type ITaskState = "IDLE" | "IN_PROGRESS" | "FINISHED" | "INTERRUPTION";
 
-type ITask = {
+export type ITask = {
   title: string;
   startTime: string;
   endTime: string;
@@ -22,7 +22,7 @@ type ITask = {
 
 export const HomeComponentPage: React.FC = () => {
   const [task, setTask] = useState<ITask>({} as ITask);
-  const [taskState, setTaskState] = useState<taskState>("IDLE");
+  const [taskState, setTaskState] = useState<ITaskState>("IDLE");
   const { isOpen: isModalOpen, openModal, toggleModal } = useModal();
 
   function handleInitPomodoro(evt: FormEvent) {
@@ -35,23 +35,28 @@ export const HomeComponentPage: React.FC = () => {
         startTime: new Date().toLocaleString(),
       });
     } else {
-      toast.error("Defina o nome da tarefa");
+      toast.error("Inform a task name");
     }
   }
 
-  function handleGiveUpPomodoro() {
+  function handleNewTaskPomodoro() {
     setTaskState("IDLE");
     setTask({} as ITask);
   }
 
-  function handleFinishPomodoro(triggerFromButton?: boolean) {
-    console.log(triggerFromButton);
-    if (!triggerFromButton) {
+  function handleFinishCountdown(triggerFromButton?: boolean) {
+    if (
+      !triggerFromButton &&
+      (taskState === "IN_PROGRESS" || taskState === "INTERRUPTION")
+    ) {
       const audio = new Audio("/sounds/beep-short.mp3");
       audio.play();
     }
 
-    openModal();
+    if (taskState === "IN_PROGRESS") {
+      openModal();
+      setTaskState("FINISHED");
+    }
   }
 
   function savePomodoroInfo(score: IEmojiScore) {
@@ -72,8 +77,50 @@ export const HomeComponentPage: React.FC = () => {
       localStorage.setItem("@pomotasks/tasks", JSON.stringify([endTask]));
     }
 
-    setTask({} as ITask);
-    setTaskState("IDLE");
+    toggleModal();
+  }
+
+  function renderButtons() {
+    switch (taskState) {
+      case "IN_PROGRESS":
+        return (
+          <>
+            <Button onClick={handleNewTaskPomodoro} color="danger">
+              Give up
+            </Button>
+            <Button onClick={() => handleFinishCountdown(true)} color="success">
+              Finish
+            </Button>
+          </>
+        );
+      case "FINISHED":
+        return (
+          <>
+            <Button onClick={() => setTaskState("IN_PROGRESS")} color="danger">
+              Skip break
+            </Button>
+            <Button
+              onClick={() => setTaskState("INTERRUPTION")}
+              color="primary"
+            >
+              Break
+            </Button>
+          </>
+        );
+      case "INTERRUPTION":
+        return (
+          <>
+            <Button onClick={handleNewTaskPomodoro} color="primary">
+              New task
+            </Button>
+            <Button onClick={() => setTaskState("IN_PROGRESS")} color="success">
+              Continue
+            </Button>
+          </>
+        );
+      default:
+        return <></>;
+    }
   }
 
   return (
@@ -81,14 +128,14 @@ export const HomeComponentPage: React.FC = () => {
       {taskState === "IDLE" ? (
         <>
           <S.WelcomeMessageContainer>
-            <S.HelloMessage>Olá, Walisson!</S.HelloMessage>
-            <S.WelcomeMessage>Bem-vinda(o) ao PomoTasks!</S.WelcomeMessage>
+            <S.HelloMessage>Hello, Walisson!</S.HelloMessage>
+            <S.WelcomeMessage>PomoTasks ⏰ ✅</S.WelcomeMessage>
           </S.WelcomeMessageContainer>
 
           <S.InputTaskContainer onSubmit={handleInitPomodoro}>
+            <h3>Start a new task</h3>
             <Input
-              label="Próxima Tarefa"
-              placeholder="Informe sua tarefa..."
+              placeholder="Type your task here..."
               value={task.title}
               onChange={(evt: FormEvent<HTMLInputElement>) => {
                 setTask({
@@ -96,31 +143,34 @@ export const HomeComponentPage: React.FC = () => {
                   title: evt.currentTarget.value,
                 });
               }}
-              readOnly={taskState !== "IDLE"}
             />
           </S.InputTaskContainer>
         </>
       ) : (
         <S.CountdownContainer>
-          <h2>{task.title}</h2>
+          {taskState === "INTERRUPTION" ? (
+            <>
+              <h2>Tempo de Descanso</h2>
+              <h4>{task.title}</h4>
+            </>
+          ) : (
+            <h2>{task.title}</h2>
+          )}
 
-          <Countdown
-            isModalOpen={isModalOpen}
-            onComplete={handleFinishPomodoro}
-          />
+          {(taskState === "INTERRUPTION" || taskState === "IN_PROGRESS") && (
+            <Countdown
+              key={Date.now()}
+              isModalOpen={isModalOpen}
+              taskState={taskState}
+              onComplete={handleFinishCountdown}
+            />
+          )}
 
-          <S.ButtonsContainer>
-            <Button onClick={handleGiveUpPomodoro} color="danger">
-              Abandonar
-            </Button>
-            <Button onClick={() => handleFinishPomodoro(true)} color="success">
-              Concluir
-            </Button>
-          </S.ButtonsContainer>
+          <S.ButtonsContainer>{renderButtons()}</S.ButtonsContainer>
 
           <Modal isOpen={isModalOpen} toggleModal={toggleModal}>
             <S.ModalContentContainer>
-              <h3>Como foi o seu pomodoro?</h3>
+              <h3>How was your pomodoro?</h3>
 
               <S.EmojiScoreContainer>
                 {emojisScore.map((score) => (

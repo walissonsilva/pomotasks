@@ -1,10 +1,12 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as ReactCountdown from "react-countdown";
+import { ITaskState } from "../pages/Home";
 
 import { Container, ValueContainer, Value, Label } from "./styles";
 
 type CountdownProps = {
   isModalOpen: boolean;
+  taskState: ITaskState;
   startDateTime?: string;
   onComplete: (triggerFromButton?: boolean) => void;
 };
@@ -28,22 +30,30 @@ const CountdownTemplate = ({
 };
 
 export const Countdown: React.FC<CountdownProps> = ({
+  taskState,
   isModalOpen,
   onComplete,
 }) => {
-  const endDateTime = useMemo(() => {
-    return Date.now() + 3000;
-  }, []);
+  const timerDurationInMinutes =
+    taskState === "IN_PROGRESS" ? 25 : taskState === "INTERRUPTION" ? 5 : 0;
+
+  console.log(timerDurationInMinutes);
+
+  function handleOnComplete() {
+    if (taskState === "IN_PROGRESS" || taskState === "INTERRUPTION")
+      return () => onComplete(false);
+  }
 
   return (
     <>
       <ReactCountdown.default
         className=""
+        key={Date.now()}
         zeroPadTime={2}
         autoStart
-        date={endDateTime}
+        date={Date.now() + timerDurationInMinutes * 1000}
         renderer={(props) => CountdownTemplate(props)}
-        onComplete={() => onComplete(false)}
+        onComplete={handleOnComplete()}
       />
     </>
   );
