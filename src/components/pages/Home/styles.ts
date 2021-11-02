@@ -54,7 +54,7 @@ export const CountdownContainer = styled.div`
 
 export const ButtonsContainer = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   gap: 2rem;
   margin: 2rem 0 1rem;
   width: 100%;
