@@ -10,6 +10,10 @@ export const HelloMessage = styled.h3`
 export const WelcomeMessage = styled.h1`
   font-weight: 500;
   font-size: 1.8rem;
+
+  sub {
+    font-size: 0.6rem;
+  }
 `;
 
 export const InputTaskContainer = styled.form`

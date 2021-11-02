@@ -15,7 +15,7 @@ export const AppCardContainer = styled.div`
 
 export const Header = styled.header`
   display: flex;
-  /* justify-content: center; */
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
 `;
@@ -49,9 +49,18 @@ export const Tab = styled.div<TabProps>`
   }
 `;
 
+export const Tabs = styled.div`
+  display: flex;
+`;
+
 export const TabLink = styled.a`
   text-decoration: none;
   color: ${(props) => props.theme.colors["alpha"]};
   font-size: 0.9rem;
   color: ${(props) => props.theme.colors["text-color"]};
+`;
+
+export const Version = styled.div`
+  font-size: 0.8rem;
+  color: ${(props) => props.theme.colors["text-color"] + "55"};
 `;
