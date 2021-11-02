@@ -48,6 +48,7 @@ export const CountdownContainer = styled.div`
     color: ${(props) => props.theme.colors.alpha};
     margin: -2rem 0 3rem;
     font-weight: 400;
+    text-align: center;
   }
 `;
 

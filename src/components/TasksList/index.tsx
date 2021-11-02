@@ -1,3 +1,5 @@
+import { useCallback, useMemo } from "react";
+import { emojisScore } from "../../data/emojisScore";
 import { ITask } from "../pages/Home";
 
 import * as S from "./styles";
@@ -12,9 +14,26 @@ export const TasksList: React.FC<TasksListProps> = ({ title, tasks }) => {
     return time.split(" ")[1].substring(0, 5);
   }
 
+  const totalEachScoreEmoji = useMemo(() => {
+    return emojisScore.map((score) => ({
+      emoji: score.emoji,
+      total: tasks.filter((task) => task.score.emoji === score.emoji).length,
+    }));
+  }, [tasks]);
+
   return (
     <S.Container>
-      {title && <S.Title>{title}</S.Title>}
+      <S.ListHeader>
+        <S.Title>{title}</S.Title>
+        <S.Summary>
+          {totalEachScoreEmoji.map((score) => (
+            <S.ScoreSummary key={score.emoji}>
+              <S.ScoreFeeling>{score.emoji}</S.ScoreFeeling>
+              <S.ScoreTotal>{score.total}</S.ScoreTotal>
+            </S.ScoreSummary>
+          ))}
+        </S.Summary>
+      </S.ListHeader>
 
       <S.List>
         {tasks.map((task, index) => (

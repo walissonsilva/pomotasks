@@ -4,7 +4,7 @@ export interface IEmojiScore {
 }
 
 export const emojisScore: IEmojiScore[] = [
-  { emoji: "🤩", description: "Focused" },
-  { emoji: "😐", description: "Neutral" },
-  { emoji: "😔", description: "Distracted" },
+  { emoji: "🤓", description: "Focused" },
+  { emoji: "😬", description: "Neutral" },
+  { emoji: "🤤", description: "Distracted" },
 ];

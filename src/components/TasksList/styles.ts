@@ -4,10 +4,44 @@ export const Container = styled.section`
   margin-top: 3rem;
 `;
 
+export const ListHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 export const Title = styled.h4`
   margin-bottom: 1rem;
   font-size: 1.4rem;
   font-weight: 500;
+`;
+
+export const Summary = styled.div`
+  display: flex;
+  align-items: center;
+  height: 1rem;
+`;
+
+export const ScoreSummary = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & + * {
+    margin-left: 1rem;
+  }
+`;
+
+export const ScoreFeeling = styled.p`
+  margin-right: 0.4rem;
+  font-size: 1.2rem;
+  line-height: 1.2rem;
+`;
+
+export const ScoreTotal = styled.p`
+  color: ${(props) => props.theme.colors.alpha};
+  font-size: 0.9rem;
+  line-height: 1.2rem;
 `;
 
 export const List = styled.div``;
@@ -30,6 +64,7 @@ export const Description = styled.p`
 
 export const Time = styled.div`
   font-size: 0.9rem;
+  padding: 0 1rem;
 `;
 
 export const Start = styled.p`

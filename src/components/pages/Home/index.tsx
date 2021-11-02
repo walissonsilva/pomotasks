@@ -159,12 +159,12 @@ export const HomeComponentPage: React.FC = () => {
       {taskState === "IDLE" ? (
         <>
           <S.WelcomeMessageContainer>
-            <S.HelloMessage>Hello, Walisson!</S.HelloMessage>
+            <S.HelloMessage>Welcome to</S.HelloMessage>
             <S.WelcomeMessage>PomoTasks ⏰ ✅</S.WelcomeMessage>
           </S.WelcomeMessageContainer>
 
           <S.InputTaskContainer onSubmit={handleInitPomodoro}>
-            <h3>Start a new task</h3>
+            <h3>Start a new Pomotask</h3>
             <Input
               placeholder="Type your task here..."
               value={task.title}
@@ -221,7 +221,7 @@ export const HomeComponentPage: React.FC = () => {
         </S.CountdownContainer>
       )}
 
-      <TasksList title="Today Tasks" tasks={todayPomotasks} />
+      <TasksList title="Today Pomotasks" tasks={todayPomotasks} />
     </AppCard>
   );
 };
