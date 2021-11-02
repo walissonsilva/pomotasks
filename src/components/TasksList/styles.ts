@@ -8,6 +8,13 @@ export const ListHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    margin-bottom: 1rem;
+  }
 `;
 
 export const Title = styled.h4`
@@ -20,6 +27,10 @@ export const Summary = styled.div`
   display: flex;
   align-items: center;
   height: 1rem;
+
+  @media (max-width: 500px) {
+    padding-left: 0.5rem;
+  }
 `;
 
 export const ScoreSummary = styled.div`

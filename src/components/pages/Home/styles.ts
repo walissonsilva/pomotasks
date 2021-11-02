@@ -57,9 +57,18 @@ export const ButtonsContainer = styled.div`
   justify-content: space-around;
   gap: 2rem;
   margin: 2rem 0 1rem;
+  width: 100%;
 
   button {
     min-width: 140px;
+  }
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+
+    button {
+      min-width: 100%;
+    }
   }
 `;
 

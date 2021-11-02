@@ -79,14 +79,17 @@ export const HomeComponentPage: React.FC = () => {
     ) {
       const audio = new Audio("/sounds/beep-short.mp3");
       audio.play();
+
+      if (taskState === "IN_PROGRESS") {
+        sendBrowserNotification(task.title, "Pomotask timer is over");
+      } else {
+        sendBrowserNotification(task.title, "Let's come back to work?");
+      }
     }
 
     if (taskState === "IN_PROGRESS") {
       openModal();
       setTaskState("FINISHED");
-      sendBrowserNotification(task.title, "Pomotask timer is over");
-    } else if (taskState === "INTERRUPTION") {
-      sendBrowserNotification(task.title, "Let's come back to work?");
     }
   }
 
@@ -191,7 +194,6 @@ export const HomeComponentPage: React.FC = () => {
           {taskState === "INTERRUPTION" || taskState === "IN_PROGRESS" ? (
             <Countdown
               key={Date.now()}
-              isModalOpen={isModalOpen}
               taskState={taskState}
               onComplete={handleFinishCountdown}
             />

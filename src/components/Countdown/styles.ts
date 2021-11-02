@@ -23,6 +23,10 @@ export const ValueContainer = styled.div`
 export const Value = styled.span`
   font-size: 5rem;
   font-family: "Fira Code", monospace;
+
+  @media (max-width: 500px) {
+    font-size: 4rem;
+  }
 `;
 
 export const Label = styled.span`

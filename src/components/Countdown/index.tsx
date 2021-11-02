@@ -1,11 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
 import * as ReactCountdown from "react-countdown";
 import { ITaskState } from "../pages/Home";
-
-import { Container, ValueContainer, Value, Label } from "./styles";
+import { Container, Label, Value, ValueContainer } from "./styles";
 
 type CountdownProps = {
-  isModalOpen: boolean;
   taskState: ITaskState;
   startDateTime?: string;
   onComplete: (triggerFromButton?: boolean) => void;
@@ -31,7 +28,6 @@ const CountdownTemplate = ({
 
 export const Countdown: React.FC<CountdownProps> = ({
   taskState,
-  isModalOpen,
   onComplete,
 }) => {
   const timerDurationInMinutes =
@@ -51,7 +47,7 @@ export const Countdown: React.FC<CountdownProps> = ({
         key={Date.now()}
         zeroPadTime={2}
         autoStart
-        date={Date.now() + timerDurationInMinutes * 1000}
+        date={Date.now() + timerDurationInMinutes * 1000 * 60}
         renderer={(props) => CountdownTemplate(props)}
         onComplete={handleOnComplete()}
       />

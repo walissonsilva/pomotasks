@@ -7,4 +7,8 @@ export const AppCardContainer = styled.div`
   padding: 3rem;
   background-color: ${(props) => props.theme.colors["background-primary"]};
   border-radius: 10px;
+
+  @media (max-width: 768px) {
+    padding: 2rem;
+  }
 `;
