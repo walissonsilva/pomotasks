@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from "react";
 import { emojisScore } from "../../data/emojisScore";
-import { ITask } from "../pages/Home";
+import { IPomotask } from "../pages/Home";
 
 import * as S from "./styles";
 
 type TasksListProps = {
   title: string;
-  tasks: ITask[];
+  tasks: IPomotask[];
 };
 
 export const TasksList: React.FC<TasksListProps> = ({ title, tasks }) => {

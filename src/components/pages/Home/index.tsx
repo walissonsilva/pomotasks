@@ -15,7 +15,7 @@ import { TasksList } from "../../TasksList";
 
 export type ITaskState = "IDLE" | "IN_PROGRESS" | "FINISHED" | "INTERRUPTION";
 
-export type ITask = {
+export type IPomotask = {
   title: string;
   startTime: string;
   endTime: string;
@@ -23,8 +23,9 @@ export type ITask = {
 };
 
 export const HomeComponentPage: React.FC = () => {
-  const [task, setTask] = useState<ITask>({} as ITask);
-  const [todayPomotasks, setTodayPomotasks] = useState<ITask[]>([]);
+  const [pomotaskTitle, setPomotaskTitle] = useState("");
+  const [task, setTask] = useState<IPomotask>({} as IPomotask);
+  const [todayPomotasks, setTodayPomotasks] = useState<IPomotask[]>([]);
   const [taskState, setTaskState] = useState<ITaskState>("IDLE");
   const { isOpen: isModalOpen, openModal, toggleModal } = useModal();
 
@@ -35,31 +36,34 @@ export const HomeComponentPage: React.FC = () => {
       });
     }
 
-    if (taskState === "FINISHED" || !todayPomotasks.length) {
-      const tasksOnStorage = localStorage.getItem("@pomotasks/tasks");
-      if (tasksOnStorage) {
-        const pomotasks: ITask[] = JSON.parse(tasksOnStorage);
+    loadTodayTasksFromLocalStorage();
+  }, []);
 
-        setTodayPomotasks(
-          pomotasks
-            .reverse()
-            .filter(
-              (pomotask) =>
-                pomotask.startTime.split(" ")[0] ===
-                new Date().toLocaleDateString()
-            )
-        );
-      }
+  function loadTodayTasksFromLocalStorage() {
+    const tasksOnStorage = localStorage.getItem("@pomotasks/tasks");
+    if (tasksOnStorage) {
+      const pomotasks: IPomotask[] = JSON.parse(tasksOnStorage);
+
+      setTodayPomotasks(
+        pomotasks
+          .reverse()
+          .filter(
+            (pomotask) =>
+              pomotask.startTime.split(" ")[0] ===
+              new Date().toLocaleDateString()
+          )
+      );
     }
-  }, [taskState, todayPomotasks]);
+  }
 
   function handleInitPomodoro(evt: FormEvent) {
     evt.preventDefault();
 
-    if (Object.keys(task).length && task.title) {
+    if (pomotaskTitle) {
       setTaskState("IN_PROGRESS");
       setTask({
         ...task,
+        title: pomotaskTitle,
         startTime: new Date().toLocaleString(),
       });
     } else {
@@ -69,7 +73,8 @@ export const HomeComponentPage: React.FC = () => {
 
   function handleNewTaskPomodoro() {
     setTaskState("IDLE");
-    setTask({} as ITask);
+    setTask({} as IPomotask);
+    setPomotaskTitle("");
   }
 
   function handleFinishCountdown(triggerFromButton?: boolean) {
@@ -96,7 +101,7 @@ export const HomeComponentPage: React.FC = () => {
   function savePomodoroInfo(score: IEmojiScore) {
     const tasks = localStorage.getItem("@pomotasks/tasks");
 
-    const endTask: ITask = {
+    const endedTask: IPomotask = {
       ...task,
       endTime: new Date().toLocaleString(),
       score: score,
@@ -105,13 +110,14 @@ export const HomeComponentPage: React.FC = () => {
     if (tasks) {
       localStorage.setItem(
         "@pomotasks/tasks",
-        JSON.stringify([...JSON.parse(tasks), endTask])
+        JSON.stringify([...JSON.parse(tasks), endedTask])
       );
     } else {
-      localStorage.setItem("@pomotasks/tasks", JSON.stringify([endTask]));
+      localStorage.setItem("@pomotasks/tasks", JSON.stringify([endedTask]));
     }
 
     toggleModal();
+    loadTodayTasksFromLocalStorage();
   }
 
   function renderButtons() {
@@ -158,7 +164,7 @@ export const HomeComponentPage: React.FC = () => {
   }
 
   return (
-    <AppCard>
+    <>
       {taskState === "IDLE" ? (
         <>
           <S.WelcomeMessageContainer>
@@ -170,12 +176,9 @@ export const HomeComponentPage: React.FC = () => {
             <h3>Start a new Pomotask</h3>
             <Input
               placeholder="Type your task here..."
-              value={task.title}
+              value={pomotaskTitle}
               onChange={(evt: FormEvent<HTMLInputElement>) => {
-                setTask({
-                  ...task,
-                  title: evt.currentTarget.value,
-                });
+                setPomotaskTitle(evt.currentTarget.value);
               }}
             />
           </S.InputTaskContainer>
@@ -224,6 +227,6 @@ export const HomeComponentPage: React.FC = () => {
       )}
 
       <TasksList title="Today Pomotasks" tasks={todayPomotasks} />
-    </AppCard>
+    </>
   );
 };

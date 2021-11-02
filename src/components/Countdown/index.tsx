@@ -1,6 +1,9 @@
-import * as ReactCountdown from "react-countdown";
+import dynamic from "next/dynamic";
+import { CountdownRenderProps } from "react-countdown";
 import { ITaskState } from "../pages/Home";
 import { Container, Label, Value, ValueContainer } from "./styles";
+
+const ReactCountdown = dynamic(() => import("react-countdown"), { ssr: false });
 
 type CountdownProps = {
   taskState: ITaskState;
@@ -8,10 +11,7 @@ type CountdownProps = {
   onComplete: (triggerFromButton?: boolean) => void;
 };
 
-const CountdownTemplate = ({
-  minutes,
-  seconds,
-}: ReactCountdown.CountdownRenderProps) => {
+const CountdownTemplate = ({ minutes, seconds }: CountdownRenderProps) => {
   return (
     <Container>
       <ValueContainer>
@@ -33,8 +33,6 @@ export const Countdown: React.FC<CountdownProps> = ({
   const timerDurationInMinutes =
     taskState === "IN_PROGRESS" ? 25 : taskState === "INTERRUPTION" ? 5 : 0;
 
-  console.log(timerDurationInMinutes);
-
   function handleOnComplete() {
     if (taskState === "IN_PROGRESS" || taskState === "INTERRUPTION")
       return () => onComplete(false);
@@ -42,7 +40,7 @@ export const Countdown: React.FC<CountdownProps> = ({
 
   return (
     <>
-      <ReactCountdown.default
+      <ReactCountdown
         className=""
         key={Date.now()}
         zeroPadTime={2}

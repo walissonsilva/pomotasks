@@ -42,11 +42,6 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap"
             rel="stylesheet"
           />
-
-          <script
-            async
-            src="https://www.googletagmanager.com/gtag/js?id=UA-119877615-1"
-          />
         </Head>
 
         <body>
