@@ -1,5 +1,6 @@
 export function getDateOnly(dateAndTime: string) {
-  return dateAndTime.split(" ")[0];
+  const [month, day] = dateAndTime.split(" ");
+  return `${month} ${day}`;
 }
 
 export function getTimeOnly(dateAndTime: string) {

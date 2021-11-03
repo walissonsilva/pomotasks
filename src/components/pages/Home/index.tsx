@@ -45,13 +45,20 @@ export const HomeComponentPage: React.FC = () => {
       const pomotasks: IPomotask[] = JSON.parse(tasksOnStorage);
 
       setTodayPomotasks(
-        pomotasks
-          .reverse()
-          .filter(
-            (pomotask) =>
-              pomotask.startTime.split(" ")[0] ===
-              new Date().toLocaleDateString()
-          )
+        pomotasks.reverse().filter((pomotask) => {
+          const [startDay, startMonth] = pomotask.startTime.split(" ");
+
+          return (
+            `${startDay} ${startMonth}` ===
+            new Date()
+              .toLocaleString("en-US", {
+                day: "2-digit",
+                month: "short",
+                timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+              })
+              .replace(",", "")
+          );
+        })
       );
     }
   }
@@ -64,7 +71,16 @@ export const HomeComponentPage: React.FC = () => {
       setTask({
         ...task,
         title: pomotaskTitle,
-        startTime: new Date().toLocaleString(),
+        startTime: new Date()
+          .toLocaleString("en-US", {
+            day: "2-digit",
+            month: "short",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          })
+          .replace(",", ""),
       });
     } else {
       toast.error("Inform a task name");
@@ -103,7 +119,15 @@ export const HomeComponentPage: React.FC = () => {
 
     const endedTask: IPomotask = {
       ...task,
-      endTime: new Date().toLocaleString(),
+      endTime: new Date()
+        .toLocaleString("en-US", {
+          day: "2-digit",
+          month: "short",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })
+        .replace(",", ""),
       score: score,
     };
 

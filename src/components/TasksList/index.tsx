@@ -11,7 +11,8 @@ type TasksListProps = {
 
 export const TasksList: React.FC<TasksListProps> = ({ title, tasks }) => {
   function getHourAndMinute(time: string) {
-    return time.split(" ")[1].substring(0, 5);
+    const [_, __, hourAndMinute] = time.split(" ");
+    return hourAndMinute;
   }
 
   const totalEachScoreEmoji = useMemo(() => {
